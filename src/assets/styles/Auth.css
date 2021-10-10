@@ -1,0 +1,209 @@
+.auth {
+    position: relative;
+    background-color: #1F212B;
+    color: white;
+}
+
+.auth__left {
+    flex: .4;
+}
+
+.auth__left>img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.auth__right {
+    flex: .6;
+}
+
+.auth__right form {
+    align-items: flex-start;
+    flex-direction: column;
+    max-width: 400px;
+    width: 40vw;
+}
+
+.auth__right h1 {
+    margin-bottom: 10px;
+}
+
+.auth__right p {
+    font-size: .9em;
+}
+
+form .MuiTextField-root {
+    width: 100% !important;
+    margin: 10px 0;
+}
+
+.auth__right section .MuiTextField-root:nth-child(1) {
+    margin-right: 20px !important;
+}
+
+.MuiInputLabel-root {
+    color: #84818A !important;
+}
+
+.MuiInputBase-root::before,
+.MuiInput-root::before {
+    border-bottom: .1px solid #84818A !important;
+}
+
+.MuiInputBase-input {
+    color: white !important;
+}
+
+.auth__right .MuiSvgIcon-root {
+    color: #84818A !important;
+    width: 17px !important;
+}
+
+.auth>span {
+    position: absolute;
+    bottom: 10vh;
+    left: 34vw;
+}
+
+.auth__right>span {
+    position: absolute;
+}
+
+.auth>span>img {
+    width: 12vw;
+}
+
+.auth>button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    padding: 10px 20px;
+    background-color: #393B45;
+    color: white;
+    border: none;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.auth>button .MuiSvgIcon-root {
+    color: #84818A !important;
+    margin-right: -10px;
+}
+
+.auth__signIn {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.auth__signIn .MuiButton-root {
+    padding: 10px 30px;
+    width: auto !important;
+    min-width: 150px !important;
+}
+
+.MuiButton-root a {
+    color: #fff;
+}
+
+.auth label {
+    color: #84818A;
+    font-size: .8em;
+}
+
+.auth .MuiCheckbox-root {
+    padding: 0;
+    padding-right: 5px;
+}
+
+.auth .MuiCheckbox-root .MuiSvgIcon-root {
+    color: #0BAFFF !important;
+}
+
+.auth input[type="checkbox"] {
+    width: 20px;
+}
+
+.auth__right .MuiButton-root {
+    background-color: #0BAFFF !important;
+    text-transform: none;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.auth__divider {
+    width: 100%;
+    position: relative;
+    color: #84818A;
+}
+
+.auth__divider span {
+    position: absolute;
+    width: 45%;
+    height: 1px;
+    background-color: #84818A;
+}
+
+.auth__divider span:nth-child(1) {
+    left: 0;
+}
+
+.auth__divider span:nth-child(2) {
+    right: 0;
+}
+
+.auth__button {
+    width: 100%;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.auth__button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 3px;
+    border: .5px solid #84818A;
+    padding: 7px 20px;
+    margin: 10px 0;
+    color: #fff;
+    font-weight: 400;
+    font-size: 1em;
+    width: 100%;
+}
+
+.auth__button button img {
+    margin: 0 10px;
+}
+
+@media only screen and (max-width: 500px) {
+    .auth__left {
+        display: none;
+    }
+
+    .auth__right form {
+        width: 80vw;
+        height: 95vh;
+        min-height: 700px;
+    }
+
+    .auth>span {
+        top: 10px;
+        left: 10px;
+        z-index: 0;
+
+    }
+
+    .auth>span>img {
+        width: 75px;
+    }
+
+    .auth__signIn .MuiButton-root {
+        padding: 7px 30px;
+        width: auto !important;
+        min-width: 100px !important;
+    }
+}

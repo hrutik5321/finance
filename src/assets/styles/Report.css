@@ -1,0 +1,253 @@
+.report__header {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+}
+
+.report__header--right {
+    justify-content: center;
+}
+
+.report__header--left {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.report__header--left>div {
+    padding: 29px;
+    box-sizing: border-box;
+    min-width: 250px;
+}
+
+.report__header--left section {
+    width: 170px;
+}
+
+.report__card {
+    margin: 10px 0;
+    justify-content: space-evenly;
+    padding: 0 5px;
+}
+
+.reportCard__content {
+    padding: 10px;
+    width: 170px;
+    align-items: flex-start;
+}
+
+.reportCard__content section {
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.report__card>img {
+    margin: "0 30px";
+}
+
+.report__chart {
+    justify-content: space-between;
+}
+
+.report__header--left>div:nth-child(2) {
+    margin-right: 10px;
+}
+
+
+
+.report__content--left {
+    margin-right: 25px;
+    flex: .5;
+    flex-direction: column;
+}
+
+.report__content--right {
+    flex: .5;
+    margin-right: 5px;
+    margin-left: -10px;
+    flex-direction: column;
+
+}
+
+.report__content {
+    display: grid;
+    grid-template-columns: 51% 48.5%;
+    justify-items: center;
+    margin: 20px 0;
+    box-sizing: border-box;
+}
+
+.report__content>div {
+    width: 97%;
+    box-sizing: border-box;
+}
+
+.report__content section {
+    justify-content: space-between;
+    padding: 20px 35px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.report__content section>span {
+    flex-direction: column;
+    align-items: flex-start
+}
+
+.report__content section>span:nth-child(2) {
+    align-items: flex-end
+}
+
+.report__content section>span span {
+    margin-top: 5px;
+}
+
+.report__content img {
+    margin-right: 7px;
+}
+
+.report>section {
+    justify-content: space-between;
+    padding: 20px;
+    font-size: .9em;
+    margin-right: 20px;
+}
+
+.report>section p {
+    color: #84818A;
+}
+
+.report .left p {
+    margin-top: 5px;
+}
+
+.report>section div {
+    flex: .5;
+    justify-content: flex-start;
+}
+
+.report .left>img {
+    margin-right: 10px;
+}
+
+.report .left p img {
+    margin-right: 7px;
+    width: 15px;
+}
+
+.report .right section {
+    justify-content: space-between;
+    flex: .5;
+    margin: 5px 20px;
+}
+
+.report .right {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.report .right img {
+    margin-left: 10px;
+}
+
+.report__footer {
+    display: flex;
+}
+
+.report__goal {
+    flex: .65;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+
+.report__goal>div {
+    padding: 20px 30px;
+    justify-content: space-between;
+}
+
+.report__goal p {
+    color: #84818A;
+}
+
+.report__goal div span {
+    flex-direction: column;
+}
+
+.report__goal div .left {
+    align-items: flex-start;
+}
+
+.report__goal div .right {
+    align-items: flex-end;
+}
+
+.report__goal--content>section {
+    border: .5px solid #fff3;
+    border-radius: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    margin-right: 10px;
+    width: 230px;
+}
+
+.report__goal--content section img {
+    margin-right: 10px;
+}
+
+.report__goal--content section h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+}
+
+.report__goal--content section>div {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.progress__bar {
+    background: #fff;
+    width: 70%;
+    height: 2px;
+    border-radius: 99px;
+    position: relative;
+}
+
+.progress__bar>span {
+    height: 2px;
+    border-radius: 99px;
+    position: absolute;
+}
+
+.report__summary {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 15px;
+    width: 100%;
+}
+
+.report__summary h4 {
+    padding: 25px 20px;
+    border-bottom: .5px solid #fff3;
+
+}
+
+.report__summary div {
+    border-bottom: .5px solid #fff3;
+    width: 100%;
+    justify-content: space-between;
+    padding: 20px;
+    font-size: .85em;
+}
+
+.report__summary div img {
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.report__summary section {
+    background: #fff2;
+    padding: 10px;
+    margin: 15px 20px;
+    border-radius: 99px;
+    font-size: .8em;
+}

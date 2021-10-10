@@ -1,0 +1,42 @@
+.sidebar {
+    padding: 20px;
+}
+
+.sidebar .MuiListItemButton-root {
+    color: #84818A !important;
+    border-radius: 14px;
+    margin: 5px 0;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+}
+
+.sidebar .MuiListItemText-secondary {
+    font-weight: 500 !important;
+}
+
+.sidebar .MuiListItemIcon-root {
+    min-width: 44px;
+}
+
+.sidebar .stroke {
+    stroke: #84818A !important;
+}
+
+
+
+.selected .MuiListItemButton-root {
+    background: #0BAFFF30 !important;
+    color: #0BAFFF !important
+}
+
+.selected .MuiListItemText-secondary {
+    color: #0BAFFF !important
+}
+
+.selected .stroke {
+    stroke: #0BAFFF !important;
+}
+
+.selected .color {
+    color: #0BAFFF !important;
+}

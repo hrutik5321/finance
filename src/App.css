@@ -1,0 +1,16 @@
+a {
+  color: #0BAFFF;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roundBox {
+  background: #35373D;
+  border-radius: 1em;
+}

@@ -1,0 +1,55 @@
+.home {
+    width: 100vw;
+}
+
+.home__header {
+    background: #1F212B;
+}
+
+.MuiPaper-root {
+    padding-right: 0 !important;
+    background-image: none !important;
+}
+
+.home__header .MuiSvgIcon-root {
+    color: #84818A !important;
+}
+
+.header__searchBox {
+    flex: .6;
+    position: relative;
+}
+
+.header__searchBox img {
+    position: absolute;
+    left: 20px;
+    width: 17px;
+}
+
+.header__searchBox input {
+    background: #282A30;
+    color: #8F92A1;
+    border-radius: 99px;
+    border: none;
+    outline: none;
+    padding: 12px;
+    font-size: .9em;
+    width: 100%;
+    padding-left: 50px;
+}
+
+.header__buttons {
+    flex: .3;
+    max-width: 160px;
+    min-width: 130px;
+    justify-content: space-between !important;
+}
+
+
+@media only screen and (max-width: 500px) {
+
+    .header__searchBox input,
+    .header__searchBox img {
+        display: none;
+    }
+}
