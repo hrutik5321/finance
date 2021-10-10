@@ -1,41 +1,47 @@
 .areachart {
-    padding: 20px;
-    margin: 7px;
+  padding: 20px;
+  margin: 7px;
+}
+
+.chart__wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .areachart__header {
-    margin: auto;
-    width: 250px;
-    justify-content: space-between;
-    align-items: flex-start;
+  margin: auto;
+  width: 250px;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .areachart__header section {
-    justify-content: flex-start;
-    align-items: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
-.areachart__header section>img {
-    width: 27px;
-    height: 27px;
-    border-radius: 50%;
-    padding: 7px;
+.areachart__header section > img {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  padding: 7px;
 }
 
-.areachart__header span>img {
-    width: .8em;
+.areachart__header span > img {
+  width: 0.8em;
 }
 
 .areachart__header section p {
-    font-weight: 600;
-    font-size: .75em;
-    display: inline-block;
-    margin-right: 10px;
+  font-weight: 600;
+  font-size: 0.75em;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .areachart__header div {
-    background: #fff2;
-    padding: 4px 14px;
-    padding-right: 10px;
-    border-radius: 10px;
+  background: #fff2;
+  padding: 4px 14px;
+  padding-right: 10px;
+  border-radius: 10px;
 }

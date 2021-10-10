@@ -92,12 +92,14 @@ function Areachart({ title, expences, icon, color }) {
           <ArrowDropDownRoundedIcon sx={{ color: "#fff4" }} />
         </div>
       </div>
-      <Chart
-        options={data.options}
-        series={data.options.series}
-        type="area"
-        width="300px"
-      />
+      <div className="chart__wrapper">
+        <Chart
+          options={data.options}
+          series={data.options.series}
+          type="area"
+          width="300px"
+        />
+      </div>
     </div>
   );
 }

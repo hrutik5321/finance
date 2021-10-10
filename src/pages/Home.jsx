@@ -24,11 +24,15 @@ const drawerWidth = 240;
 function Home(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [sideBar, setSiderBar] = React.useState(true);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleSideBar = () => {
+    setSiderBar(!sideBar);
+  };
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -37,10 +41,16 @@ function Home(props) {
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
+        sx={
+          sideBar
+            ? {
+                width: { sm: `calc(100% - ${drawerWidth}px)` },
+                ml: { sm: `${drawerWidth}px` },
+              }
+            : {
+                width: "100%",
+              }
+        }
         className="home__header"
       >
         <Toolbar
@@ -53,6 +63,15 @@ function Home(props) {
               edge="start"
               onClick={handleDrawerToggle}
               sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleSideBar}
+              sx={{ mr: 2, display: { xs: "none", sm: "block" } }}
             >
               <MenuIcon />
             </IconButton>
@@ -103,6 +122,7 @@ function Home(props) {
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
+        style={sideBar ? { display: "block" } : { display: "none" }}
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
