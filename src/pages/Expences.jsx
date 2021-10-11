@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Areachart from "../components/Areachart";
 import AdIcon from "../assets/icons/ad.svg";
 import DollarIcon from "../assets/icons/dollar.svg";
@@ -9,8 +9,20 @@ import ReceiptIcon from "../assets/icons/receipt.svg";
 import ShippingIcon from "../assets/icons/shipping.svg";
 import "../assets/styles/Expences.css";
 import Chart from "react-apexcharts";
+import { useSelector, useDispatch } from "react-redux";
+import { getUserSpendMoney } from "../features/userIncomes/userIncomeSlice";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 function Expences() {
+  const dispatch = useDispatch();
+  const { moneyLoader, spendMoney } = useSelector((state) => state.userincomes);
+
+  useEffect(() => {
+    if (spendMoney.length <= 0) {
+      dispatch(getUserSpendMoney());
+    }
+  }, []);
   const data = [
     {
       id: 1,
@@ -108,7 +120,7 @@ function Expences() {
         show: false,
       },
     },
-    series: [44, 55, 41, 17, 15, 33],
+    series: spendMoney,
   };
 
   return (
@@ -231,12 +243,18 @@ function Expences() {
         </div>
         <div className="expences__donutchart roundBox flex">
           <section>
-            <Chart
-              options={donut.options}
-              series={donut.series}
-              type="donut"
-              width="320"
-            />
+            {moneyLoader ? (
+              <Box sx={{ display: "flex" }}>
+                <CircularProgress color="inherit" />
+              </Box>
+            ) : (
+              <Chart
+                options={donut.options}
+                series={donut.series}
+                type="donut"
+                width="320"
+              />
+            )}
           </section>
           <div className="expences__chart--label">
             {data.map((data) => (

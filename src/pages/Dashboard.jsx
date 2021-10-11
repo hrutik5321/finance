@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SubdirectoryArrowLeftIcon from "@mui/icons-material/SubdirectoryArrowLeft";
 import { Box } from "@mui/system";
 import "../assets/styles/Dashboard.css";
+import CircularProgress from "@mui/material/CircularProgress";
 import WalletIcon from "../assets/icons/wallet-add.svg";
 import DollarIcon from "../assets/icons/dollar-circle.svg";
 import BankIcon from "../assets/icons/bankcard.svg";
@@ -17,8 +18,19 @@ import CardIcon from "../assets/icons/card-send.svg";
 import PlusIcon from "../assets/icons/plus-circle.svg";
 import Divider from "../assets/icons/divider.svg";
 import Chart from "react-apexcharts";
+import fire from "../firebase/fire";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getUserSpendMoney,
+  getUserIcome,
+  getUserExpence,
+} from "../features/userIncomes/userIncomeSlice";
 
 function Dashboard() {
+  const dispatch = useDispatch();
+  const { moneyLoader, spendMoney, incomeExpenceLoader, income, expences } =
+    useSelector((state) => state.userincomes);
+
   const data = {
     options: {
       theme: {
@@ -108,14 +120,37 @@ function Dashboard() {
     series: [
       {
         name: "Income",
-        data: [20, 21, 22, 23, 20, 27, 18, 20, 24, 25, 26, 23],
+        data: income,
       },
       {
         name: "Expences",
-        data: [13, 16, 20, 17, 21, 18, 17, 20, 17, 22, 25, 17],
+        data: expences,
       },
     ],
   };
+
+  const fetchIncomeUser = () => {
+    if (income.length <= 0) {
+      dispatch(getUserIcome());
+    }
+  };
+
+  const fetchUserExpences = () => {
+    if (expences.length <= 0) {
+      dispatch(getUserExpence());
+    }
+  };
+  const fetchSpendedMoney = () => {
+    if (spendMoney.length <= 0) {
+      dispatch(getUserSpendMoney());
+    }
+  };
+
+  useEffect(() => {
+    fetchIncomeUser();
+    fetchUserExpences();
+    fetchSpendedMoney();
+  }, []);
 
   const donut = {
     options: {
@@ -169,14 +204,14 @@ function Dashboard() {
         },
       },
     },
-    series: [44, 55, 41, 17, 15, 33],
+    series: spendMoney,
   };
 
   return (
     <div className="dashboard">
       <div className="dashboard__welcome flex">
         <div className="dashboard__welcome--left">
-          <h1>Good afternoon, Kushagrah</h1>
+          <h1>Good afternoon , Kushagrah</h1>
           <p>
             Friday, 08 September 2021.&nbsp;
             <span>
@@ -379,12 +414,18 @@ function Dashboard() {
       </div>
       <div className="dashboard__chart flex">
         <div className="chart__line roundBox flex">
-          <Chart
-            options={data.options}
-            series={data.series}
-            type="line"
-            width="475"
-          />
+          {incomeExpenceLoader ? (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress color="inherit" />
+            </Box>
+          ) : (
+            <Chart
+              options={data.options}
+              series={data.series}
+              type="line"
+              width="475"
+            />
+          )}
         </div>
         <div className="chart__donut roundBox flex">
           <div className="chart__donut--top flex ">
@@ -406,12 +447,18 @@ function Dashboard() {
               <KeyboardArrowDownIcon sx={{ fontSize: ".9em" }} />
             </div>
           </div>
-          <Chart
-            options={donut.options}
-            series={donut.series}
-            type="donut"
-            width="350"
-          />
+          {moneyLoader ? (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress color="inherit" />
+            </Box>
+          ) : (
+            <Chart
+              options={donut.options}
+              series={donut.series}
+              type="donut"
+              width="350"
+            />
+          )}
         </div>
       </div>
       <section className="flex">

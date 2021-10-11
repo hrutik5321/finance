@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import fire from "../../firebase/fire";
-import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 
 export const signupUser = createAsyncThunk(
   "authentication/signupUser",

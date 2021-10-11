@@ -1,5 +1,5 @@
 import DownloadIcon from "../assets/icons/download.svg";
-import React from "react";
+import React, { useEffect } from "react";
 import "../assets/styles/Revenue.css";
 import Chart from "react-apexcharts";
 
@@ -9,6 +9,8 @@ import RazerpayIcon from "../assets/icons/pay.svg";
 import VimbusIcon from "../assets/icons/v.png";
 import PaytmIcon from "../assets/icons/paytm2.svg";
 import CashfreeIcon from "../assets/icons/cashfree2.png";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 import Stripe from "../assets/icons/stripe.svg";
 import Razerpay from "../assets/icons/razerpay.svg";
@@ -16,7 +18,25 @@ import Vimbus from "../assets/icons/vimbus.png";
 import Paytm from "../assets/icons/paytm.svg";
 import Cashfree from "../assets/icons/cashfree.png";
 
+import {
+  getUserTotalrevenue,
+  getUserSpendMoney,
+} from "../features/userIncomes/userIncomeSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 function Revenue() {
+  const dispatch = useDispatch();
+  const { moneyLoader, spendMoney, totalRevenueLoader, totalRevenue } =
+    useSelector((state) => state.userincomes);
+
+  useEffect(() => {
+    if (totalRevenue.length <= 0) {
+      dispatch(getUserTotalrevenue());
+    }
+    if (spendMoney.length <= 0) {
+      dispatch(getUserSpendMoney());
+    }
+  }, []);
   const data = {
     options: {
       theme: {
@@ -25,7 +45,7 @@ function Revenue() {
       series: [
         {
           name: "series1",
-          data: [15, 18, 16, 14, 17, 20, 16],
+          data: totalRevenue,
         },
       ],
       dataLabels: {
@@ -100,7 +120,7 @@ function Revenue() {
         show: false,
       },
     },
-    series: [44, 55, 41, 17, 15],
+    series: spendMoney,
   };
   const revenueData = [
     {
@@ -161,13 +181,19 @@ function Revenue() {
             <p>Total Revenue</p>
             <h1>₹127,892.32</h1>
           </span>
-          <Chart
-            options={data.options}
-            series={data.options.series}
-            type="area"
-            width="430px"
-            height="125px"
-          />
+          {totalRevenueLoader ? (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress color="inherit" />
+            </Box>
+          ) : (
+            <Chart
+              options={data.options}
+              series={data.options.series}
+              type="area"
+              width="430px"
+              height="125px"
+            />
+          )}
         </div>
         <div className="revenue__barchart">
           {revenueData.map((data) => (
@@ -182,12 +208,19 @@ function Revenue() {
         </div>
       </div>
       <div className="revenue__right ">
-        <Chart
-          options={pie.options}
-          series={pie.series}
-          type="pie"
-          width="325"
-        />
+        {moneyLoader ? (
+          <Box sx={{ display: "flex" }}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : (
+          <Chart
+            options={pie.options}
+            series={pie.series}
+            type="pie"
+            width="325"
+          />
+        )}
+
         <h3>Recent Transaction</h3>
         <section style={{ borderTop: "none" }}>
           <div className="revenue__right--content flex">

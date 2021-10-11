@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Chart from "react-apexcharts";
 import "../assets/styles/Areachart.css";
 import EditIcon from "../assets/icons/edit.svg";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserAdExpences } from "../features/userIncomes/userIncomeSlice";
 
 function Areachart({ title, expences, icon, color }) {
+  const dispatch = useDispatch();
+  const { incomeExpenceLoader, adExpences } = useSelector(
+    (state) => state.userincomes
+  );
+
+  useEffect(() => {
+    if (adExpences.length <= 0) {
+      dispatch(getUserAdExpences());
+    }
+  }, []);
   const data = {
     options: {
       theme: {
@@ -13,7 +27,7 @@ function Areachart({ title, expences, icon, color }) {
       series: [
         {
           name: "series1",
-          data: [59, 40, 28, 51, 42],
+          data: adExpences,
         },
       ],
       dataLabels: {
@@ -93,12 +107,18 @@ function Areachart({ title, expences, icon, color }) {
         </div>
       </div>
       <div className="chart__wrapper">
-        <Chart
-          options={data.options}
-          series={data.options.series}
-          type="area"
-          width="300px"
-        />
+        {incomeExpenceLoader ? (
+          <Box sx={{ display: "flex" }}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : (
+          <Chart
+            options={data.options}
+            series={data.options.series}
+            type="area"
+            width="300px"
+          />
+        )}
       </div>
     </div>
   );

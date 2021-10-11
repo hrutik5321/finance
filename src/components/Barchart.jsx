@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Chart from "react-apexcharts";
 import "../assets/styles/Areachart.css";
 // import EditIcon from "../assets/icons/edit.svg";
 // import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import { getUserBrandrevenue } from "../features/userIncomes/userIncomeSlice";
+import { useSelector, useDispatch } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 function BarChart({ title, expences, icon, color }) {
+  const dispatch = useDispatch();
+  const { brandRevenue, brandRevenueLoader } = useSelector(
+    (state) => state.userincomes
+  );
+
+  useEffect(() => {
+    if (brandRevenue.length <= 0) {
+      dispatch(getUserBrandrevenue());
+    }
+  }, []);
+
   const data = {
     options: {
       theme: {
@@ -21,7 +36,7 @@ function BarChart({ title, expences, icon, color }) {
       series: [
         {
           name: "series1",
-          data: [10, 15, 10, 20, 10, 15],
+          data: brandRevenue,
         },
       ],
       dataLabels: {
@@ -111,13 +126,19 @@ function BarChart({ title, expences, icon, color }) {
           </span>
         </section>
       </div>
-      <Chart
-        options={data.options}
-        series={data.options.series}
-        type="bar"
-        width="285px"
-        height="150px"
-      />
+      {brandRevenueLoader ? (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress color="inherit" />
+        </Box>
+      ) : (
+        <Chart
+          options={data.options}
+          series={data.options.series}
+          type="bar"
+          width="285px"
+          height="150px"
+        />
+      )}
     </div>
   );
 }

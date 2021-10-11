@@ -6,12 +6,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SvgIcon from "@mui/material/SvgIcon";
 import "../assets/styles/Sidebar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../features/authentication/authenticationSlice";
+import {
+  login,
+  authenticatedUser,
+} from "../features/authentication/authenticationSlice";
+import fire from "../firebase/fire";
 
 function Sidebar() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const nav = [
     {
       id: 1,
@@ -81,6 +86,14 @@ function Sidebar() {
     },
   ];
 
+  const logoutUser = async () => {
+    await fire.auth().signOut();
+    await dispatch(authenticatedUser(false));
+    history.push("/login");
+  };
+
+  useEffect(() => {}, [dispatch]);
+
   return (
     <div className="sidebar">
       <ListItem sx={{ marginBottom: "20px" }}>
@@ -108,7 +121,7 @@ function Sidebar() {
           </NavLink>
         ))}
       </List>
-      <NavLink to="/">
+      <div>
         <ListItemButton
           sx={{ position: "fixed", bottom: "1em" }}
           onClick={() => dispatch(login())}
@@ -133,9 +146,9 @@ function Sidebar() {
               />
             </SvgIcon>
           </ListItemIcon>
-          <ListItemText secondary="Logout" />
+          <ListItemText secondary="Logout" onClick={logoutUser} />
         </ListItemButton>
-      </NavLink>
+      </div>
     </div>
   );
 }
