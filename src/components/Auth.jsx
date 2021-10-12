@@ -13,7 +13,7 @@ import GoogleLogo from "../assets/icons/google.svg";
 import FacebookLogo from "../assets/icons/fb.svg";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import React from "react";
+import React, { useState } from "react";
 import AuthBg from "../assets/images/auth_bg.jpg";
 import AuthPara from "../assets/images/auth_para.png";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
@@ -23,8 +23,6 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import fire from "../firebase/fire";
 import {
-  loginUser,
-  signupUser,
   otherSigninUser,
   authenticatedUser,
 } from "../features/authentication/authenticationSlice";
@@ -38,10 +36,11 @@ function Auth({ logIn, signUp }) {
     password: "",
     showPassword: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const { loading } = useSelector((state) => state.authentication);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -57,23 +56,67 @@ function Auth({ logIn, signUp }) {
   // SIgnup User
   const onSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(signupUser(values));
-    if (!loading) {
-      history.push("/login");
-    }
+    setLoading(true);
+    fire
+      .auth()
+      .createUserWithEmailAndPassword(values.emailAddress, values.password)
+      .then((credential) => {
+        fire.firestore().collection("users").doc(credential.user.uid).set({
+          firstname: values.firstName,
+          lastname: values.lastName,
+        });
+      })
+      .then(() => {
+        setLoading(false);
+        history.push("/login");
+      })
+      .catch((err) => {
+        setLoading(false);
+        switch (err.code) {
+          case "auth/email-already-in-use":
+            setError("Email already in use");
+            break;
+          case "auth/invalid-email":
+            setError("Invalid Email Adress");
+            break;
+          default:
+            setError("something went wrong");
+            break;
+        }
+      });
   };
 
   // Logged In User
   const handleLogin = async (e) => {
     e.preventDefault();
-    const loginInfo = {
-      email: values.emailAddress,
-      password: values.password,
-    };
-    await dispatch(loginUser(loginInfo));
-    if (!loading) {
-      history.push("/dashboard");
-    }
+    setLoading(true);
+    fire
+      .auth()
+      .signInWithEmailAndPassword(values.emailAddress, values.password)
+      .then(() => {
+        setLoading(false);
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        setLoading(false);
+        switch (err.code) {
+          case "auth/invalid-email":
+            setError("Email Not Valid");
+            break;
+          case "auth/user-disabled":
+            setError("User currently disabled");
+            break;
+          case "auth/user-not-found":
+            setError("User Not Found Plese signup");
+            break;
+          case "auth/wrong-password":
+            setError("Password Does Not Matched");
+            break;
+          default:
+            setError("Something Went Wrong");
+            break;
+        }
+      });
   };
 
   // change logged in user
@@ -131,7 +174,7 @@ function Auth({ logIn, signUp }) {
 
   React.useEffect(() => {
     authUserState();
-  }, [dispatch]);
+  }, [dispatch, error]);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -162,6 +205,7 @@ function Auth({ logIn, signUp }) {
               </p>
             </>
           )}
+          {error ? <p style={{ color: "red" }}>{error}</p> : ""}
           <TextField
             type="text"
             variant="standard"

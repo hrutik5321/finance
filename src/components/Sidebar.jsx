@@ -90,6 +90,7 @@ function Sidebar() {
     await fire.auth().signOut();
     await dispatch(authenticatedUser(false));
     history.push("/login");
+    dispatch(login());
   };
 
   useEffect(() => {}, [dispatch]);
@@ -124,7 +125,7 @@ function Sidebar() {
       <div>
         <ListItemButton
           sx={{ position: "fixed", bottom: "1em" }}
-          onClick={() => dispatch(login())}
+          onClick={logoutUser}
         >
           <ListItemIcon>
             <SvgIcon htmlColor="#0000">

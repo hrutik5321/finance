@@ -158,6 +158,10 @@ function Dashboard() {
       plotOptions: {
         pie: {
           donut: {
+            makers: {
+              shape: "circle",
+              radius: 50,
+            },
             labels: {
               show: true,
               name: {
