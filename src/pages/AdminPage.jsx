@@ -4,15 +4,14 @@ import { Switch, Link, Route } from "react-router-dom";
 import AdminHome from "../components/Admin/AdminHome";
 import AdminAdExpences from "../components/Admin/AdminAdExpences";
 import AdminRevenue from "../components/Admin/AdminRevenue";
-import fire from "../firebase/fire";
 
 function AdminPage() {
-  const addFiredata = () => {
-    fire.firestore().collection("");
-  };
   return (
     <div className="admin">
       <div className="sidebar__wrapper">
+        <div>
+          <h1>Add Dynamic</h1>
+        </div>
         <ul className="admin__sidebar">
           <li>
             <Link to="/admin">
@@ -38,9 +37,6 @@ function AdminPage() {
         </ul>
       </div>
       <div className="admin__main">
-        <div>
-          <h1>Add Dynamic Data</h1>
-        </div>
         <Switch>
           <Route path="/admin/" exact>
             <AdminHome />
