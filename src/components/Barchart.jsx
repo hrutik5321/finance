@@ -10,12 +10,12 @@ import Box from "@mui/material/Box";
 
 function BarChart({ title, expences, icon, color }) {
   const dispatch = useDispatch();
-  const { brandRevenue, brandRevenueLoader } = useSelector(
+  const { brandRevenue, brandRevenueLoader, startUpdate } = useSelector(
     (state) => state.userincomes
   );
 
   useEffect(() => {
-    if (brandRevenue.length <= 0) {
+    if (brandRevenue.length <= 0 || startUpdate) {
       dispatch(getUserBrandrevenue());
     }
   }, []);

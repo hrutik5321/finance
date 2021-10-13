@@ -20,16 +20,24 @@ import Divider from "../assets/icons/divider.svg";
 import Chart from "react-apexcharts";
 import fire from "../firebase/fire";
 import { useDispatch, useSelector } from "react-redux";
+import { changeUpdateCall } from "../features/admin/adminDashboardSlice";
 import {
   getUserSpendMoney,
   getUserIcome,
-  getUserExpence,
 } from "../features/userIncomes/userIncomeSlice";
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const { moneyLoader, spendMoney, incomeExpenceLoader, income, expences } =
-    useSelector((state) => state.userincomes);
+  const {
+    moneyLoader,
+    spendMoney,
+    incomeExpenceLoader,
+    income,
+    expences,
+    startUpdate,
+    months,
+  } = useSelector((state) => state.userincomes);
+  const { isUpdated } = useSelector((state) => state.admindashboard);
 
   const data = {
     options: {
@@ -72,20 +80,7 @@ function Dashboard() {
         },
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "July",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
+        categories: months,
         axisTicks: {
           show: false,
         },
@@ -135,10 +130,8 @@ function Dashboard() {
     }
   };
 
-  const fetchUserExpences = () => {
-    if (expences.length <= 0) {
-      dispatch(getUserExpence());
-    }
+  const setDynamicData = () => {
+    alert("hellow");
   };
   const fetchSpendedMoney = () => {
     if (spendMoney.length <= 0) {
@@ -147,10 +140,11 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    fetchIncomeUser();
-    fetchUserExpences();
-    fetchSpendedMoney();
-  }, []);
+    if (income.length <= 0 || spendMoney.length <= 0 || startUpdate) {
+      fetchIncomeUser();
+      fetchSpendedMoney();
+    }
+  }, [startUpdate]);
 
   const donut = {
     options: {
@@ -215,7 +209,7 @@ function Dashboard() {
     <div className="dashboard">
       <div className="dashboard__welcome flex">
         <div className="dashboard__welcome--left">
-          <h1>Good afternoon , Kushagrah</h1>
+          <h1 onClick={setDynamicData}>Good afternoon , Kushagrah</h1>
           <p>
             Friday, 08 September 2021.&nbsp;
             <span>

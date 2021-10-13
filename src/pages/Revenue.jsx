@@ -26,14 +26,19 @@ import { useSelector, useDispatch } from "react-redux";
 
 function Revenue() {
   const dispatch = useDispatch();
-  const { moneyLoader, spendMoney, totalRevenueLoader, totalRevenue } =
-    useSelector((state) => state.userincomes);
+  const {
+    moneyLoader,
+    spendMoney,
+    totalRevenueLoader,
+    totalRevenue,
+    startUpdate,
+  } = useSelector((state) => state.userincomes);
 
   useEffect(() => {
-    if (totalRevenue.length <= 0) {
+    if (totalRevenue.length <= 0 || startUpdate) {
       dispatch(getUserTotalrevenue());
     }
-    if (spendMoney.length <= 0) {
+    if (spendMoney.length <= 0 || startUpdate) {
       dispatch(getUserSpendMoney());
     }
   }, []);

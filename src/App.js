@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { grey } from "@mui/material/colors";
+import AdminPage from "./pages/AdminPage";
 
 const theme = (mode) =>
   createTheme({
@@ -52,6 +53,9 @@ function App() {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/admin">
+            <AdminPage />
           </Route>
           <Route path="/register">
             <Signup />
