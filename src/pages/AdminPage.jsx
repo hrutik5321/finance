@@ -1,36 +1,96 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../assets/styles/AdminPage.css";
 import { Switch, Link, Route } from "react-router-dom";
 import AdminHome from "../components/Admin/AdminHome";
 import AdminAdExpences from "../components/Admin/AdminAdExpences";
 import AdminRevenue from "../components/Admin/AdminRevenue";
+import fire from "../firebase/fire";
+import { useDispatch } from "react-redux";
+import { getDynamicAds } from "../features/admin/adminDashboardSlice";
 
 function AdminPage() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getDynamicAds());
+  }, []);
+
+  const addFirebasedata = () => {
+    fire
+      .firestore()
+      .collection("dynamicData")
+      .doc("dynamicAds")
+      .set({
+        data: [
+          {
+            title: "AD SPENDING",
+            expences: 12300,
+            percent: 35,
+            color: "#7b61ff",
+            values: [59, 40, 28, 51, 42],
+          },
+          {
+            title: "COGS",
+            expences: 21400,
+            percent: 35,
+            color: "#ff5e2f",
+            values: [59, 40, 28, 51, 42],
+          },
+          {
+            title: "SHIPPING",
+            expences: 9200,
+            percent: 35,
+            color: "#0bafff",
+            values: [59, 40, 28, 51, 42],
+          },
+          {
+            title: "SHOPIFY",
+            expences: 2700,
+            percent: 35,
+            color: "#4fbf67",
+            values: [59, 40, 28, 51, 42],
+          },
+          {
+            title: "GST TAX",
+            expences: 4500,
+            percent: 35,
+            color: "#fead36",
+            values: [59, 40, 28, 51, 42],
+          },
+          {
+            title: "MICS",
+            expences: 23200,
+            percent: 35,
+            color: "#1ad492",
+            values: [59, 40, 28, 51, 42],
+          },
+        ],
+      })
+      .then(() => alert("data added"))
+      .catch(() => alert("nai zala"));
+  };
   return (
     <div className="admin">
       <div className="sidebar__wrapper">
-        <div>
-          <h1>Add Dynamic</h1>
-        </div>
         <ul className="admin__sidebar">
           <li>
             <Link to="/admin">
               <span style={{ marginLeft: "15px", color: "black" }}>
-                Update Income
+                User Incomes
               </span>
             </Link>
           </li>
           <li>
             <Link to="/admin/advertise">
               <span style={{ marginLeft: "15px", color: "black" }}>
-                Update Advertise
+                User Expences
               </span>
             </Link>
           </li>
           <li>
             <Link to="/admin/adspend">
               <span style={{ marginLeft: "15px", color: "black" }}>
-                Update AdSpend
+                User Revenues
               </span>
             </Link>
           </li>
@@ -39,12 +99,15 @@ function AdminPage() {
       <div className="admin__main">
         <Switch>
           <Route path="/admin/" exact>
+            <h3>User Incomes & Expences</h3>
             <AdminHome />
           </Route>
           <Route path="/admin/advertise" exact>
+            <h3>User Expences</h3>
             <AdminAdExpences />
           </Route>
           <Route path="/admin/adspend" exact>
+            <h3>User Revenue</h3>
             <AdminRevenue />
           </Route>
         </Switch>

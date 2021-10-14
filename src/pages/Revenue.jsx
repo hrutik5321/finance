@@ -23,6 +23,7 @@ import {
   getUserSpendMoney,
 } from "../features/userIncomes/userIncomeSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { getBrandRevenues } from "../features/admin/adminRevenueSlice";
 
 function Revenue() {
   const dispatch = useDispatch();
@@ -34,12 +35,19 @@ function Revenue() {
     startUpdate,
   } = useSelector((state) => state.userincomes);
 
+  const { userBranRevenue, revenueLoader } = useSelector(
+    (state) => state.adminrevenue
+  );
+
   useEffect(() => {
     if (totalRevenue.length <= 0 || startUpdate) {
       dispatch(getUserTotalrevenue());
     }
     if (spendMoney.length <= 0 || startUpdate) {
       dispatch(getUserSpendMoney());
+    }
+    if (userBranRevenue.length <= 0) {
+      dispatch(getBrandRevenues());
     }
   }, []);
   const data = {
@@ -127,56 +135,8 @@ function Revenue() {
     },
     series: spendMoney,
   };
-  const revenueData = [
-    {
-      id: 1,
-      title: "AD SPENDING",
-      expences: "₹12.3K",
-      icon: Stripe,
-      color: "#7b61ff",
-      percent: "35%",
-    },
-    {
-      id: 2,
-      title: "COGS",
-      expences: "₹21.4K",
-      icon: Razerpay,
-      color: "#ff5e2f",
-      percent: "35%",
-    },
-    {
-      id: 3,
-      title: "SHIPPING",
-      expences: "₹9.2K",
-      icon: Cashfree,
-      color: "#0bafff",
-      percent: "35%",
-    },
-    {
-      id: 4,
-      title: "SHOPIFY",
-      expences: "₹2.7K",
-      icon: Paytm,
-      color: "#4fbf67",
-      percent: "35%",
-    },
-    {
-      id: 5,
-      title: "GST TAX",
-      expences: "₹4.5K",
-      icon: Vimbus,
-      color: "#fead36",
-      percent: "35%",
-    },
-    {
-      id: 6,
-      title: "MICS",
-      expences: "₹23.2K",
-      icon: Stripe,
-      color: "#1ad492",
-      percent: "35%",
-    },
-  ];
+
+  const revenueIcons = [Stripe, Razerpay, Cashfree, Paytm, Vimbus, Stripe];
   return (
     <div className="revenue">
       <div className="revenue__left">
@@ -201,15 +161,22 @@ function Revenue() {
           )}
         </div>
         <div className="revenue__barchart">
-          {revenueData.map((data) => (
-            <BarChart
-              key={data.id}
-              title={data.title}
-              expences={data.expences}
-              icon={data.icon}
-              color={data.color}
-            />
-          ))}
+          {revenueLoader ? (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress color="inherit" />
+            </Box>
+          ) : (
+            userBranRevenue.map((data, i) => (
+              <BarChart
+                key={i}
+                title={data.title}
+                expences={data.expences}
+                icon={revenueIcons[i]}
+                color={data.color}
+                revdata={data.values}
+              />
+            ))
+          )}
         </div>
       </div>
       <div className="revenue__right ">

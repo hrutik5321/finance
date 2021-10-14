@@ -8,18 +8,8 @@ import { useSelector, useDispatch } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-function BarChart({ title, expences, icon, color }) {
-  const dispatch = useDispatch();
-  const { brandRevenue, brandRevenueLoader, startUpdate } = useSelector(
-    (state) => state.userincomes
-  );
-
-  useEffect(() => {
-    if (brandRevenue.length <= 0 || startUpdate) {
-      dispatch(getUserBrandrevenue());
-    }
-  }, []);
-
+function BarChart({ title, expences, icon, color, revdata }) {
+  const { revenueLoader } = useSelector((state) => state.adminrevenue);
   const data = {
     options: {
       theme: {
@@ -36,7 +26,7 @@ function BarChart({ title, expences, icon, color }) {
       series: [
         {
           name: "series1",
-          data: brandRevenue,
+          data: revdata,
         },
       ],
       dataLabels: {
@@ -103,6 +93,11 @@ function BarChart({ title, expences, icon, color }) {
       colors: [color],
     },
   };
+  const kFormatter = (num) => {
+    return Math.abs(num) > 999
+      ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+      : Math.sign(num) * Math.abs(num);
+  };
   return (
     <div
       className="areachart roundBox"
@@ -122,11 +117,11 @@ function BarChart({ title, expences, icon, color }) {
             style={{ width: "100%", borderRadius: 0, height: "40px" }}
           />
           <span>
-            <h2 style={{ marginLeft: "20px" }}>{expences}</h2>
+            <h2 style={{ marginLeft: "20px" }}>₹ {kFormatter(expences)}</h2>
           </span>
         </section>
       </div>
-      {brandRevenueLoader ? (
+      {revenueLoader ? (
         <Box sx={{ display: "flex" }}>
           <CircularProgress color="inherit" />
         </Box>

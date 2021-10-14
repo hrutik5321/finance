@@ -13,14 +13,15 @@ export const adminUserIcome = createAsyncThunk(
   }
 );
 
-export const updateUserSpend = createAsyncThunk(
-  "authentication/updateUserSpend",
-  async (inco) => {
-    var changeUserCost = inco.incomes;
-    changeUserCost[inco.index] = inco.value;
-    // const changeUserSpends = inco.incomes;
-    // changeUserSpends[inco.index] = inco.value;
-    return changeUserCost;
+export const getDynamicAds = createAsyncThunk(
+  "authentication/getDynamicAds",
+  async () => {
+    const response = fire
+      .firestore()
+      .collection("dynamicData")
+      .doc("dynamicAds");
+    const data = await response.get().then((doc) => doc.data().data);
+    return data;
   }
 );
 
@@ -28,7 +29,11 @@ export const adminDashboardSlice = createSlice({
   name: "admindashboard",
   initialState: {
     userincome: [],
+    userAdexpences: [],
+    activeAdExpences: [],
+    activeAdTitle: "",
     incomeExpenceLoader: false,
+    userAdLoader: false,
     error: false,
     isUpdated: false,
   },
@@ -45,12 +50,39 @@ export const adminDashboardSlice = createSlice({
         .update({
           data: state.userincome,
         })
-        .then(() => console.log("zala update"))
-        .catch(() => console.log("nai zala"));
+        .then(() => console.log("Values Updated"))
+        .catch(() => console.log("Error"));
       state.isUpdated = true;
     },
-    changeUpdateCall: (state) => {
-      state.isUpdated = false;
+    updateActiveAd: (state, action) => {
+      state.activeAdExpences = state.userAdexpences[action.payload].values;
+      state.activeAdTitle = state.userAdexpences[action.payload];
+    },
+    updateUserAdExpences: (state, action) => {
+      console.log(action.payload);
+      const prevValues = state.activeAdExpences;
+      prevValues[action.payload.index] = action.payload.value;
+      state.activeAdExpences = prevValues;
+      const data = {
+        color: action.payload.color,
+        expences: action.payload.expences,
+        values: state.activeAdExpences,
+        title: action.payload.title,
+        percent: action.payload.percent,
+      };
+      const index = state.userAdexpences.findIndex(
+        (d) => d.title === state.activeAdTitle.title
+      );
+      state.userAdexpences[index] = data;
+      fire
+        .firestore()
+        .collection("dynamicData")
+        .doc("dynamicAds")
+        .update({
+          data: state.userAdexpences,
+        })
+        .then(() => alert("Values Updated"));
+      console.log(data);
     },
   },
   extraReducers: (builder) => {
@@ -68,21 +100,24 @@ export const adminDashboardSlice = createSlice({
       });
 
     builder
-      .addCase(updateUserSpend.pending, (state) => {
-        state.incomeExpenceLoader = true;
+      .addCase(getDynamicAds.pending, (state) => {
+        state.userAdLoader = true;
       })
-      .addCase(updateUserSpend.fulfilled, (state, { payload }) => {
+      .addCase(getDynamicAds.fulfilled, (state, { payload }) => {
         console.log(payload);
-        state.incomeExpenceLoader = false;
+        state.userAdexpences = payload;
+        state.userAdLoader = false;
+        state.activeAdExpences = payload[0].values;
+        state.activeAdTitle = payload[0];
       })
-      .addCase(updateUserSpend.rejected, (state) => {
+      .addCase(getDynamicAds.rejected, (state) => {
         state.error = true;
-        state.incomeExpenceLoader = false;
+        state.userAdLoader = false;
       });
   },
 });
 
-export const { updateIncomevalues, changeUpdateCall } =
+export const { updateIncomevalues, updateActiveAd, updateUserAdExpences } =
   adminDashboardSlice.actions;
 
 export default adminDashboardSlice.reducer;

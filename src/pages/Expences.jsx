@@ -11,18 +11,33 @@ import "../assets/styles/Expences.css";
 import Chart from "react-apexcharts";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserSpendMoney } from "../features/userIncomes/userIncomeSlice";
+import { getDynamicAds } from "../features/admin/adminDashboardSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 function Expences() {
   const dispatch = useDispatch();
   const { moneyLoader, spendMoney } = useSelector((state) => state.userincomes);
+  const { userAdexpences, userAdLoader } = useSelector(
+    (state) => state.admindashboard
+  );
 
   useEffect(() => {
     if (spendMoney.length <= 0) {
       dispatch(getUserSpendMoney());
     }
-  }, []);
+    if (userAdexpences.length <= 0) {
+      dispatch(getDynamicAds());
+    }
+  }, [userAdexpences]);
+  const icons = [
+    AdIcon,
+    DollarIcon,
+    ShippingIcon,
+    ShopifyIcon,
+    DiscountIcon,
+    ReceiptIcon,
+  ];
   const data = [
     {
       id: 1,
@@ -126,13 +141,14 @@ function Expences() {
   return (
     <div className="expences">
       <div className="expences__chart">
-        {data.map((data) => (
+        {userAdexpences.map((data, i) => (
           <Areachart
-            key={data.id}
+            key={i}
             title={data.title}
             expences={data.expences}
-            icon={data.icon}
+            icon={icons[i]}
             color={data.color}
+            addata={data.values}
           />
         ))}
       </div>

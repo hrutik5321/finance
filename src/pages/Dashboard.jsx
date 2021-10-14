@@ -144,7 +144,7 @@ function Dashboard() {
       fetchIncomeUser();
       fetchSpendedMoney();
     }
-  }, [startUpdate]);
+  }, [startUpdate, spendMoney, expences, income]);
 
   const donut = {
     options: {

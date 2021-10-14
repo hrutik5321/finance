@@ -93,8 +93,8 @@ export const userIncomeSlice = createSlice({
         .update({
           data: state.spendMoney,
         })
-        .then(() => alert("zala update"))
-        .catch(() => console.log("nai zala"));
+        .then(() => alert("Values Updated"))
+        .catch(() => console.log("Values Updated"));
       state.startUpdate = true;
     },
     updateAdExpences: (state, action) => {
@@ -106,8 +106,8 @@ export const userIncomeSlice = createSlice({
         .update({
           data: state.adExpences,
         })
-        .then(() => alert("zala update"))
-        .catch(() => console.log("nai zala"));
+        .then(() => alert("Values updated"))
+        .catch(() => console.log("Error"));
       state.startUpdate = true;
     },
     updateTotalrevenue: (state, action) => {
@@ -119,7 +119,7 @@ export const userIncomeSlice = createSlice({
         .update({
           data: state.totalRevenue,
         })
-        .then(() => alert("zala update"))
+        .then(() => alert("Values Updated"))
         .catch(() => console.log("nai zala"));
       state.startUpdate = true;
     },
@@ -132,7 +132,7 @@ export const userIncomeSlice = createSlice({
         .update({
           data: state.brandRevenue,
         })
-        .then(() => alert("zala update"))
+        .then(() => alert("Values Updated"))
         .catch(() => console.log("nai zala"));
       state.startUpdate = true;
     },

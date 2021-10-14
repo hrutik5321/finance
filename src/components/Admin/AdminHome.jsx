@@ -147,9 +147,6 @@ function AdminHome() {
           )}
         </table>
       </div>
-      <Link to="/dashboard">
-        <h3>Dashboard</h3>
-      </Link>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserAdExpences } from "../features/userIncomes/userIncomeSlice";
 
-function Areachart({ title, expences, icon, color }) {
+function Areachart({ title, expences, icon, color, addata }) {
   const dispatch = useDispatch();
   const { incomeExpenceLoader, adExpences } = useSelector(
     (state) => state.userincomes
@@ -19,6 +19,7 @@ function Areachart({ title, expences, icon, color }) {
       dispatch(getUserAdExpences());
     }
   }, []);
+
   const data = {
     options: {
       theme: {
@@ -27,7 +28,7 @@ function Areachart({ title, expences, icon, color }) {
       series: [
         {
           name: "series1",
-          data: adExpences,
+          data: addata,
         },
       ],
       dataLabels: {
@@ -86,6 +87,11 @@ function Areachart({ title, expences, icon, color }) {
       colors: [color],
     },
   };
+  const kFormatter = (num) => {
+    return Math.abs(num) > 999
+      ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+      : Math.sign(num) * Math.abs(num);
+  };
   return (
     <div className="areachart roundBox">
       <div className="areachart__header flex">
@@ -98,7 +104,7 @@ function Areachart({ title, expences, icon, color }) {
           <span>
             <p style={{ color: `${color}` }}>{title}</p>
             <img src={EditIcon} alt="" />
-            <h2>{expences}</h2>
+            <h2>₹ {kFormatter(expences)}</h2>
           </span>
         </section>
         <div className="roundBox flex">
