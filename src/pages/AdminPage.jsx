@@ -7,6 +7,7 @@ import AdminRevenue from "../components/Admin/AdminRevenue";
 import fire from "../firebase/fire";
 import { useDispatch } from "react-redux";
 import { getDynamicAds } from "../features/admin/adminDashboardSlice";
+import AdminTableTest from "../components/Admin/AdminTableTest";
 
 function AdminPage() {
   const dispatch = useDispatch();
@@ -94,6 +95,11 @@ function AdminPage() {
               </span>
             </Link>
           </li>
+          <li>
+            <Link to="/admin/table">
+              <span style={{ marginLeft: "15px", color: "black" }}>Table</span>
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="admin__main">
@@ -109,6 +115,10 @@ function AdminPage() {
           <Route path="/admin/adspend" exact>
             <h3>User Revenue</h3>
             <AdminRevenue />
+          </Route>
+          <Route path="/admin/table" exact>
+            <h3>Table</h3>
+            <AdminTableTest />
           </Route>
         </Switch>
       </div>
