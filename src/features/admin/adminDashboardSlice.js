@@ -50,7 +50,7 @@ export const adminDashboardSlice = createSlice({
         .update({
           data: state.userincome,
         })
-        .then(() => console.log("Values Updated"))
+        .then(() => alert("Values Updated"))
         .catch(() => console.log("Error"));
       state.isUpdated = true;
     },

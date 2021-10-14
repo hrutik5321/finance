@@ -95,30 +95,18 @@ function AdminPage() {
               </span>
             </Link>
           </li>
-          <li>
-            <Link to="/admin/table">
-              <span style={{ marginLeft: "15px", color: "black" }}>Table</span>
-            </Link>
-          </li>
         </ul>
       </div>
       <div className="admin__main">
         <Switch>
           <Route path="/admin/" exact>
-            <h3>User Incomes & Expences</h3>
             <AdminHome />
           </Route>
           <Route path="/admin/advertise" exact>
-            <h3>User Expences</h3>
             <AdminAdExpences />
           </Route>
           <Route path="/admin/adspend" exact>
-            <h3>User Revenue</h3>
             <AdminRevenue />
-          </Route>
-          <Route path="/admin/table" exact>
-            <h3>Table</h3>
-            <AdminTableTest />
           </Route>
         </Switch>
       </div>

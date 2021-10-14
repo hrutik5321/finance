@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { grey } from "@mui/material/colors";
 import AdminPage from "./pages/AdminPage";
+import AdminLogin from "./pages/AdminLogin";
 
 const theme = (mode) =>
   createTheme({
@@ -59,6 +60,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Signup />
+          </Route>
+          <Route path="/signin/admin">
+            <AdminLogin />
           </Route>
           <Route path="/dashboard">
             <ThemeProvider theme={darkModeTheme}>

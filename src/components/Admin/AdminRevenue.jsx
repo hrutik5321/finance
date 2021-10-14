@@ -1,4 +1,17 @@
 import React, { useState, useEffect } from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import { useSelector, useDispatch } from "react-redux";
 import DetailAdminrevenue from "./AdminRevenue/DetailAdminrevenue";
 import {
@@ -11,7 +24,6 @@ import {
 } from "../../features/userIncomes/userIncomeSlice";
 import { updateActiveRevenue } from "../../features/admin/adminRevenueSlice";
 import { getBrandRevenues } from "../../features/admin/adminRevenueSlice";
-import { Link } from "react-router-dom";
 
 function AdminRevenue() {
   const dispatch = useDispatch();
@@ -26,6 +38,12 @@ function AdminRevenue() {
   const { totalRevenue, totalRevenueLoader, brandRevenue, brandRevenueLoader } =
     useSelector((state) => state.userincomes);
 
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const { brandrevenues, activeBrand, userBranRevenue, revenueLoader } =
     useSelector((state) => state.adminrevenue);
 
@@ -39,13 +57,6 @@ function AdminRevenue() {
       };
       dispatch(updateTotalrevenue(data));
     }
-    // if (brandrevenueTitle) {
-    //   const data = {
-    //     index: index,
-    //     value: brandrevenueCost,
-    //   };
-    //   dispatch(updateBrandrevenue(data));
-    // }
   };
 
   useEffect(() => {
@@ -59,108 +70,154 @@ function AdminRevenue() {
   const changeActiveAd = (i) => {
     console.log(i);
     dispatch(updateActiveRevenue(i));
+    setOpen(true);
   };
 
-  // const addFirebaseValues = () => {
-  //   fire
-  //     .firestore()
-  //     .collection("dynamicData")
-  //     .doc("dynamicBrandRevenue")
-  //     .set({
-  //       data: [
-  //         {
-  //           color: "#7b61ff",
-  //           title: "stripe",
-  //           percent: 35,
-  //           expences: 12300,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //         {
-  //           color: "#ff5e2f",
-  //           title: "Razerpay",
-  //           percent: 35,
-  //           expences: 21400,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //         {
-  //           color: "#0bafff",
-  //           title: "Cashfree",
-  //           percent: 35,
-  //           expences: 9200,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //         {
-  //           color: "#4fbf67",
-  //           title: "Paytm",
-  //           percent: 35,
-  //           expences: 2700,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //         {
-  //           color: "#fead36",
-  //           title: "Vimbus",
-  //           percent: 35,
-  //           expences: 4500,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //         {
-  //           color: "#1ad492",
-  //           title: "MICS",
-  //           percent: 35,
-  //           expences: 23200,
-  //           values: [10, 15, 10, 20, 10, 15],
-  //         },
-  //       ],
-  //     })
-  //     .then(() => alert("data Added"))
-  //     .catch(() => alert("Error to add"));
-  // };
   return (
-    <div>
-      <div style={{ marginTop: "20px" }}>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-around",
+      }}
+    >
+      <div style={{ marginTop: "20px", marginLeft: "50px" }}>
+        <h3 style={{ width: "100%", textAlign: "center" }}>Total Revenues</h3>
         <div>
           <form>
-            <input type="text" disabled={true} value={totalrevenueTitle} />
+            {/* <input type="text" disabled={true} value={totalrevenueTitle} /> */}
+            <label style={{ marginRight: "30px", fontWeight: "bolder" }}>
+              {totalrevenueTitle}
+            </label>
             <input
+              style={{
+                padding: "5px 10px",
+                fontSize: "16px",
+                outline: "none",
+                border: "none",
+                borderBottom: "1px solid black",
+              }}
               type="number"
               value={totalrevenueCost}
               onChange={(e) => setTotalrevenuecost(e.target.valueAsNumber)}
             />
-            <button onClick={userSpends}>Update</button>
+            <Button
+              variant="contained"
+              onClick={userSpends}
+              style={{ marginLeft: "20px" }}
+            >
+              Update
+            </Button>
           </form>
         </div>
-        <table>
-          <tr>
-            <th style={{ textAlign: "left" }}>Title</th>
-            <th style={{ textAlign: "left" }}>Spend</th>
-          </tr>
-          {totalRevenueLoader ? (
-            <h1>loading</h1>
-          ) : (
-            titles.map((info, i) => {
-              return (
-                <tr>
-                  <td>{info}</td>
-                  <td>{totalRevenue[i]}</td>
-                  <button
-                    onClick={() => {
-                      setTotalrevenuetitle(info);
-                      setTotalrevenuecost(totalRevenue[i]);
-                      setIndex(i);
-                    }}
-                  >
-                    update
-                  </button>
-                </tr>
-              );
-            })
-          )}
-        </table>
+        <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+          <Table sx={{ minWidth: 200 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Months</TableCell>
+                <TableCell align="center">Expence</TableCell>
+                <TableCell align="right">update</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {totalRevenueLoader ? (
+                <h1>Loading</h1>
+              ) : (
+                titles.map((info, i) => (
+                  <TableRow key={i}>
+                    <TableCell component="th" scope="row">
+                      {info}
+                    </TableCell>
+                    <TableCell align="center">{totalRevenue[i]}</TableCell>
+
+                    <TableCell align="right">
+                      <Button
+                        variant="outlined"
+                        onClick={() => {
+                          setTotalrevenuetitle(info);
+                          setTotalrevenuecost(totalRevenue[i]);
+                          setIndex(i);
+                        }}
+                      >
+                        update
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
-      <hr style={{ marginTop: "20px" }} />
-      <div style={{ display: "flex", flex: 1 }}>
-        <div style={{ marginTop: "80px" }}>
-          <table>
+      <div>
+        <h3 style={{ width: "100%", textAlign: "center", marginTop: "20px" }}>
+          Brand Revenues
+        </h3>
+        <div style={{ display: "flex", flex: 1 }}>
+          <div style={{ marginTop: "20px", marginLeft: "50px" }}>
+            <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+              <Table sx={{ minWidth: 200 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Title</TableCell>
+                    <TableCell align="center">Spend</TableCell>
+                    <TableCell align="right">Update</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {revenueLoader ? (
+                    <h1>Loading</h1>
+                  ) : (
+                    userBranRevenue.map((data, i) => (
+                      <TableRow key={i}>
+                        <TableCell component="th" scope="row">
+                          {data.title}
+                        </TableCell>
+                        <TableCell align="center">{data.expences}</TableCell>
+
+                        <TableCell align="right">
+                          <Button
+                            variant="outlined"
+                            onClick={() => {
+                              changeActiveAd(i);
+                            }}
+                          >
+                            update
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {activeBrand.title}
+                </DialogTitle>
+                <DialogContent>
+                  <DetailAdminrevenue />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Done</Button>
+                </DialogActions>
+              </Dialog>
+            </TableContainer>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default AdminRevenue;
+
+{
+  /* <table>
             <tr>
               <th style={{ textAlign: "left" }}>Title</th>
               <th style={{ textAlign: "left" }}>Spend</th>
@@ -180,17 +237,10 @@ function AdminRevenue() {
                     >
                       update
                     </button>
-                    {/* <DetailAdExpence title={data.title} data={data.values} /> */}
-                  </tr>
-                );
-              })
-            )}
-          </table>
-        </div>
-        <DetailAdminrevenue />
-      </div>
-    </div>
-  );
+                    {/* <DetailAdExpence title={data.title} data={data.values} /> */
 }
-
-export default AdminRevenue;
+//         </tr>
+//       );
+//     })
+//   )}
+// </table> */}
