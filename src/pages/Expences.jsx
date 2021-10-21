@@ -152,7 +152,8 @@ function Expences() {
           />
         ))}
       </div>
-      <div className="expences__section">
+      {/* TODO: UNCOMMENT TO SEE RECENT ENTRIES */}
+      {/* <div className="expences__section">
         <div className="expences__enteries roundBox">
           <div className="expences__enteries--header flex">
             <p>Recent Entries</p>
@@ -284,7 +285,7 @@ function Expences() {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

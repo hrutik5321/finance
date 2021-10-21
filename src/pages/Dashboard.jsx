@@ -20,7 +20,9 @@ import Divider from "../assets/icons/divider.svg";
 import Chart from "react-apexcharts";
 import fire from "../firebase/fire";
 import { useDispatch, useSelector } from "react-redux";
-import { changeUpdateCall } from "../features/admin/adminDashboardSlice";
+import { updateValues, updateLoader } from "../features/sheets/staticsSlice";
+import { getDatabase, onValue, ref } from "@firebase/database";
+
 import {
   getUserSpendMoney,
   getUserIcome,
@@ -37,7 +39,11 @@ function Dashboard() {
     startUpdate,
     months,
   } = useSelector((state) => state.userincomes);
-  const { isUpdated } = useSelector((state) => state.admindashboard);
+  const { loader, adSpend, COG, Shipping, tax, salary, misc, activeSheet } =
+    useSelector((state) => state.statics);
+  // const { username } = useSelector((state) => state.authentication);
+  const [username, setUserName] = useState("");
+  const [dayName, setDayName] = useState("");
 
   const data = {
     options: {
@@ -130,13 +136,113 @@ function Dashboard() {
     }
   };
 
-  const setDynamicData = () => {
-    alert("hellow");
-  };
+  // const setDynamicData = () => {
+  //   alert("hellow");
+  // };
   const fetchSpendedMoney = () => {
     if (spendMoney.length <= 0) {
       dispatch(getUserSpendMoney());
     }
+  };
+
+  const databaseValues = async () => {
+    dispatch(updateLoader());
+    const db = getDatabase();
+    const sheetRef = ref(
+      db,
+      `${activeSheet === 1 ? "masterSheet" : "chieldSheet"}`
+    );
+    await onValue(sheetRef, (snapshot) => {
+      dispatch(updateValues(snapshot.val()));
+    });
+  };
+
+  useEffect(() => {
+    databaseValues();
+  }, [activeSheet]);
+
+  // const setDatas = () => {
+  //   fire
+  //     .firestore()
+  //     .collection("dynamicData")
+  //     .doc("dynamicAds")
+  //     .set({
+  //       data: [
+  //         {
+  //           color: "#7b61ff",
+  //           expences: 12300,
+  //           percent: 35,
+  //           title: "AD SPENDING",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //         {
+  //           color: "#ff5e2f",
+  //           expences: 21400,
+  //           percent: 35,
+  //           title: "COGS",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //         {
+  //           color: "#1ad492",
+  //           expences: 23200,
+  //           percent: 35,
+  //           title: "MICS",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //         {
+  //           color: "#0bafff",
+  //           expences: 9200,
+  //           percent: 35,
+  //           title: "SHIPPING",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //         {
+  //           color: "#4fbf67",
+  //           expences: 2700,
+  //           percent: 35,
+  //           title: "SHOPIFY",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //         {
+  //           color: "#fead36",
+  //           expences: 4500,
+  //           percent: 35,
+  //           title: "GST TAX",
+  //           values: [60, 40, 28, 52, 42],
+  //         },
+  //       ],
+  //     })
+  //     .then(() => alert("data added success"));
+  // };
+
+  const getUsername = () => {
+    const name = localStorage.getItem("username");
+    setUserName(name);
+  };
+  const [year, setYear] = useState(null);
+  const [curMonth, setCurMonth] = useState("");
+  const getDayName = () => {
+    var a = new Date();
+    var days = new Array(7);
+    days[0] = "Sunday";
+    days[1] = "Monday";
+    days[2] = "Tuesday";
+    days[3] = "Wednesday";
+    days[4] = "Thursday";
+    days[5] = "Friday";
+    days[6] = "Saturday";
+    var r = days[a.getDay()];
+    setDayName(r); // 2009-11-10
+    const month = a.toLocaleString("default", { month: "long" });
+    setCurMonth(month);
+    const y = a.getFullYear();
+    setYear(y);
+  };
+  const [curDate, setCurDate] = useState(null);
+  const getCurrentDate = () => {
+    var a = new Date();
+    var r = a.getDate();
+    setCurDate(r);
   };
 
   useEffect(() => {
@@ -144,11 +250,14 @@ function Dashboard() {
       fetchIncomeUser();
       fetchSpendedMoney();
     }
+    getUsername();
+    getDayName();
+    getCurrentDate();
   }, [startUpdate, spendMoney, expences, income]);
 
   const donut = {
     options: {
-      labels: ["AD Spend", "COG", "Shipping", "Tax", "Salary", "Domain"],
+      labels: ["AD Spend", "COG", "Shipping", "Tax", "Salary", "MISC"],
       plotOptions: {
         pie: {
           donut: {
@@ -202,16 +311,18 @@ function Dashboard() {
         },
       },
     },
-    series: spendMoney,
+    series: [adSpend, COG, Shipping, tax, salary, misc],
   };
 
   return (
     <div className="dashboard">
       <div className="dashboard__welcome flex">
         <div className="dashboard__welcome--left">
-          <h1 onClick={setDynamicData}>Good afternoon , Kushagrah</h1>
+          <h1 onClick={getDayName}>
+            Good afternoon , {username ? username : ""}
+          </h1>
           <p>
-            Friday, 08 September 2021.&nbsp;
+            {dayName}, {curDate} {curMonth} {year}.&nbsp;
             <span>
               Today you have new notification. See you monthly
               <Link to="/"> Report</Link>
@@ -445,7 +556,7 @@ function Dashboard() {
               <KeyboardArrowDownIcon sx={{ fontSize: ".9em" }} />
             </div>
           </div>
-          {moneyLoader ? (
+          {loader ? (
             <Box sx={{ display: "flex" }}>
               <CircularProgress color="inherit" />
             </Box>

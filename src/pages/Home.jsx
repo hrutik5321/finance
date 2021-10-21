@@ -18,13 +18,31 @@ import Dashboard from "./Dashboard";
 import Expences from "./Expences";
 import Revenue from "./Revenue";
 import Report from "./Report";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { Route, Switch } from "react-router-dom";
+import { updateActiveSheet } from "../features/sheets/staticsSlice";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 function Home(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [sideBar, setSiderBar] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const changeSheet = (num) => {
+    dispatch(updateActiveSheet(num));
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -100,7 +118,14 @@ function Home(props) {
             <Badge badgeContent={4} color="error">
               <img src={MessageIcon} alt="" />
             </Badge>
-            <div className="flex">
+            <Button
+              id="basic-button"
+              aria-controls="basic-menu"
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+              className="flex"
+            >
               <Avatar
                 src="https://source.unsplash.com/random"
                 sx={{ width: { xs: "35px" }, height: { xs: "35px" } }}
@@ -114,7 +139,33 @@ function Home(props) {
                   },
                 }}
               />
-            </div>
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  changeSheet(1);
+                }}
+              >
+                Sheet 1
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  changeSheet(2);
+                }}
+              >
+                Sheet 2
+              </MenuItem>
+            </Menu>
           </div>
         </Toolbar>
       </AppBar>

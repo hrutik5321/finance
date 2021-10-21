@@ -25,6 +25,7 @@ import fire from "../firebase/fire";
 import {
   otherSigninUser,
   authenticatedUser,
+  authUserName,
 } from "../features/authentication/authenticationSlice";
 import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 
@@ -128,6 +129,22 @@ function Auth({ logIn, signUp }) {
           uid: user.uid,
         };
         dispatch(authenticatedUser(authUser));
+        localStorage.setItem("uid", user.uid);
+        localStorage.setItem("email", user.email);
+        fire
+          .firestore()
+          .collection("users")
+          .doc(`${user.uid}`)
+          .onSnapshot((snapshot) => {
+            if (snapshot.data()) {
+              if (snapshot.data().firstname) {
+                dispatch(authUserName(snapshot.data().firstname));
+                localStorage.setItem("username", snapshot.data().firstname);
+              }
+            } else {
+              return 0;
+            }
+          });
       }
     });
   };
@@ -145,6 +162,7 @@ function Auth({ logIn, signUp }) {
           uid: res.user.uid,
         };
         dispatch(otherSigninUser(googleAuthUser));
+        localStorage.setItem("username", res.user.displayName);
       })
       .then(() => history.push("/dashboard"))
       .catch((err) => {
@@ -165,6 +183,7 @@ function Auth({ logIn, signUp }) {
           uid: res.user.uid,
         };
         dispatch(otherSigninUser(facebookAuthUser));
+        localStorage.setItem("username", res.user.displayName);
       })
       .then(() => history.push("/dashboard"))
       .catch((err) => {
@@ -174,7 +193,7 @@ function Auth({ logIn, signUp }) {
 
   React.useEffect(() => {
     authUserState();
-  }, [dispatch, error]);
+  }, [dispatch]);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();

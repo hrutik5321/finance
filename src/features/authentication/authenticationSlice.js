@@ -12,6 +12,7 @@ export const authenticationSlice = createSlice({
       email: "",
       uid: "",
     },
+    username: "",
   },
   reducers: {
     increment: (state) => {
@@ -29,6 +30,9 @@ export const authenticationSlice = createSlice({
     otherSigninUser: (state, action) => {
       state.authUser = action.payload;
     },
+    authUserName: (state, action) => {
+      state.username = action.payload;
+    },
   },
 });
 
@@ -38,6 +42,7 @@ export const {
   login,
   authenticatedUser,
   otherSigninUser,
+  authUserName,
 } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;
