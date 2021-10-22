@@ -15,6 +15,8 @@ export const staticsSlice = createSlice({
     activeSheet: 1,
     loader: true,
     error: false,
+    adSpendTotal: 0,
+    adSpendData: [],
     values: [],
     adSpend: 0,
     COG: 0,
@@ -29,6 +31,7 @@ export const staticsSlice = createSlice({
       state.activeSheet = action.payload;
     },
     updateValues: (state, action) => {
+      // console.log(action.payload);
       state.adSpend = 0;
       state.COG = 0;
       state.misc = 0;
@@ -38,7 +41,24 @@ export const staticsSlice = createSlice({
         // console.log(d.AdSpend);
         if (d.AdSpend !== "" && d.AdSpend !== "TOTAL") {
           state.adSpend += 1;
+          if (
+            (d.AdSpend === "PUNK | DEC 10" ||
+              d.AdSpend === "PUNK | DEC 18" ||
+              d.AdSpend === "PUNK | DEC 26" ||
+              d.AdSpend === "PUNK | JAN 3" ||
+              d.AdSpend === "PUNK | JAN 9") &&
+            state.adSpendData.length < 5
+          ) {
+            const previous = state.adSpendData;
+            previous.push(d.Adamount);
+            state.adSpendData = previous;
+          }
+          // console.log(typeof d.AdSpend);
         }
+        if (d.AdSpend === "TOTAL") {
+          state.adSpendTotal = d.Adamount;
+        }
+
         if (d.COGS !== "" && d.COGS !== "TOTAL") {
           state.COG += 1;
         }

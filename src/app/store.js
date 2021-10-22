@@ -5,6 +5,7 @@ import userIncomeReducer from "../features/userIncomes/userIncomeSlice";
 import adminDashboardSlice from "../features/admin/adminDashboardSlice";
 import adminRevenueSlice from "../features/admin/adminRevenueSlice";
 import staticsSlice from "../features/sheets/staticsSlice";
+import expenceSlice from "../features/sheets/expenceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     admindashboard: adminDashboardSlice,
     adminrevenue: adminRevenueSlice,
     statics: staticsSlice,
+    expence: expenceSlice,
   },
 });

@@ -12,15 +12,18 @@ import Chart from "react-apexcharts";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserSpendMoney } from "../features/userIncomes/userIncomeSlice";
 import { getDynamicAds } from "../features/admin/adminDashboardSlice";
+import { getDatabase, onValue, ref } from "@firebase/database";
+import {
+  updateExpences,
+  updateExpenceLoader,
+} from "../features/sheets/expenceSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 function Expences() {
   const dispatch = useDispatch();
   const { moneyLoader, spendMoney } = useSelector((state) => state.userincomes);
-  const { userAdexpences, userAdLoader } = useSelector(
-    (state) => state.admindashboard
-  );
+  const { userAdexpences } = useSelector((state) => state.admindashboard);
 
   useEffect(() => {
     if (spendMoney.length <= 0) {
@@ -38,119 +41,199 @@ function Expences() {
     DiscountIcon,
     ReceiptIcon,
   ];
+  const { activeSheet } = useSelector((state) => state.statics);
+  const {
+    adSpendTotal,
+    adSpendData,
+    expenceLoader,
+    cogTotal,
+    cogData,
+    miscTotal,
+    miscData,
+    shippingTotal,
+    shippingData,
+  } = useSelector((state) => state.expence);
+  // const data = [
+  //   {
+  //     id: 1,
+  //     title: "AD SPENDING",
+  //     expences: adSpendTotal,
+  //     icon: AdIcon,
+  //     color: "#7b61ff",
+  //     percent: "35%",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "COGS",
+  //     expences: "₹21.4K",
+  //     icon: DollarIcon,
+  //     color: "#ff5e2f",
+  //     percent: "35%",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "SHIPPING",
+  //     expences: "₹9.2K",
+  //     icon: ShippingIcon,
+  //     color: "#0bafff",
+  //     percent: "35%",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "SHOPIFY",
+  //     expences: "₹2.7K",
+  //     icon: ShopifyIcon,
+  //     color: "#4fbf67",
+  //     percent: "35%",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "GST TAX",
+  //     expences: "₹4.5K",
+  //     icon: DiscountIcon,
+  //     color: "#fead36",
+  //     percent: "35%",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "MICS",
+  //     expences: "₹23.2K",
+  //     icon: ReceiptIcon,
+  //     color: "#1ad492",
+  //     percent: "35%",
+  //   },
+  // ];
+  // const donut = {
+  //   options: {
+  //     labels: ["AD Spend", "COG", "Shipping", "Tax", "Salary", "Domain"],
+  //     plotOptions: {
+  //       pie: {
+  //         donut: {
+  //           labels: {
+  //             show: true,
+  //             name: {
+  //               show: true,
+  //               fontSize: "22px",
+  //               fontFamily: "Helvetica, Arial, sans-serif",
+  //               fontWeight: 600,
+  //               color: undefined,
+  //               offsetY: -10,
+  //             },
+  //             value: {
+  //               show: true,
+  //               fontSize: "16px",
+  //               fontFamily: "Helvetica, Arial, sans-serif",
+  //               fontWeight: 400,
+  //               color: undefined,
+  //               offsetY: 16,
+  //             },
+  //             total: {
+  //               show: true,
+  //               showAlways: false,
+  //               label: "Total",
+  //               fontWeight: 500,
+  //               color: "#fff",
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //     stroke: {
+  //       show: false,
+  //     },
+  //     chart: {
+  //       id: "donut",
+  //       background: "#35373D",
+  //       foreColor: "#fff",
+  //     },
+  //     legend: {
+  //       show: false,
+  //     },
+  //   },
+  //   series: spendMoney,
+  // };
+
+  const databaseValues = async () => {
+    dispatch(updateExpenceLoader());
+    const db = getDatabase();
+    const sheetRef = ref(
+      db,
+      `${activeSheet === 1 ? "masterSheet" : "chieldSheet"}`
+    );
+    await onValue(sheetRef, (snapshot) => {
+      dispatch(updateExpences(snapshot.val()));
+    });
+  };
+
   const data = [
     {
-      id: 1,
-      title: "AD SPENDING",
-      expences: "₹12.3K",
-      icon: AdIcon,
       color: "#7b61ff",
-      percent: "35%",
+      expences: adSpendTotal,
+      percent: 35,
+      title: "AD SPENDING",
+      values: adSpendData,
     },
+
     {
-      id: 2,
-      title: "COGS",
-      expences: "₹21.4K",
-      icon: DollarIcon,
       color: "#ff5e2f",
-      percent: "35%",
+      expences: cogTotal,
+      percent: 35,
+      title: "COGS",
+      values: cogData,
     },
     {
-      id: 3,
-      title: "SHIPPING",
-      expences: "₹9.2K",
-      icon: ShippingIcon,
-      color: "#0bafff",
-      percent: "35%",
-    },
-    {
-      id: 4,
-      title: "SHOPIFY",
-      expences: "₹2.7K",
-      icon: ShopifyIcon,
-      color: "#4fbf67",
-      percent: "35%",
-    },
-    {
-      id: 5,
-      title: "GST TAX",
-      expences: "₹4.5K",
-      icon: DiscountIcon,
-      color: "#fead36",
-      percent: "35%",
-    },
-    {
-      id: 6,
-      title: "MICS",
-      expences: "₹23.2K",
-      icon: ReceiptIcon,
       color: "#1ad492",
-      percent: "35%",
+      expences: miscTotal,
+      percent: 35,
+      title: "MICS",
+      values: miscData,
+    },
+    {
+      color: "#0bafff",
+      expences: shippingTotal,
+      percent: 35,
+      title: "SHIPPING",
+      values: shippingData,
+    },
+    {
+      color: "#4fbf67",
+      expences: 0,
+      percent: 35,
+      title: "SALARY",
+      values: [0, 0, 0, 0, 0],
+    },
+    {
+      color: "#fead36",
+      expences: 0,
+      percent: 35,
+      title: "GST TAX",
+      values: [0, 0, 0, 0, 0],
     },
   ];
-  const donut = {
-    options: {
-      labels: ["AD Spend", "COG", "Shipping", "Tax", "Salary", "Domain"],
-      plotOptions: {
-        pie: {
-          donut: {
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                fontSize: "22px",
-                fontFamily: "Helvetica, Arial, sans-serif",
-                fontWeight: 600,
-                color: undefined,
-                offsetY: -10,
-              },
-              value: {
-                show: true,
-                fontSize: "16px",
-                fontFamily: "Helvetica, Arial, sans-serif",
-                fontWeight: 400,
-                color: undefined,
-                offsetY: 16,
-              },
-              total: {
-                show: true,
-                showAlways: false,
-                label: "Total",
-                fontWeight: 500,
-                color: "#fff",
-              },
-            },
-          },
-        },
-      },
-      stroke: {
-        show: false,
-      },
-      chart: {
-        id: "donut",
-        background: "#35373D",
-        foreColor: "#fff",
-      },
-      legend: {
-        show: false,
-      },
-    },
-    series: spendMoney,
-  };
+
+  useEffect(() => {
+    databaseValues();
+  }, [activeSheet]);
 
   return (
     <div className="expences">
       <div className="expences__chart">
-        {userAdexpences.map((data, i) => (
-          <Areachart
-            key={i}
-            title={data.title}
-            expences={data.expences}
-            icon={icons[i]}
-            color={data.color}
-            addata={data.values}
-          />
-        ))}
+        {expenceLoader ? (
+          <Box sx={{ display: "flex" }}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : (
+          data.map((data, i) => (
+            <Areachart
+              key={i}
+              title={data.title}
+              expences={data.expences}
+              icon={icons[i]}
+              color={data.color}
+              addata={data.values}
+            />
+          ))
+        )}
       </div>
       {/* TODO: UNCOMMENT TO SEE RECENT ENTRIES */}
       {/* <div className="expences__section">
