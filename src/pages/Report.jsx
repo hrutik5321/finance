@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import Box from "@mui/system/Box";
 import "../assets/styles/Dashboard.css";
@@ -25,9 +25,44 @@ import IncomeIcon from "../assets/icons/income.svg";
 import ProfitIcon from "../assets/icons/profit.svg";
 import YearlyIcon from "../assets/icons/yearly.svg";
 import DownIcon from "../assets/icons/download_down.svg";
+import { getDatabase, onValue, ref } from "@firebase/database";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateReportsLoader,
+  updateReports,
+} from "../features/sheets/reportsSlice";
 
 function Report() {
+  const dispatch = useDispatch();
+  const { activeSheet } = useSelector((state) => state.statics);
+  const {
+    reportsLoader,
+    totalRevenue,
+    totalExpences,
+    realtimeProfit,
+    adCredit,
+    stock,
+    incommingPay,
+    estimatedProfit,
+  } = useSelector((state) => state.reports);
+
+  const databaseProfits = async () => {
+    dispatch(updateReportsLoader());
+    const db = getDatabase();
+    const sheetRef = ref(
+      db,
+      `${activeSheet === 1 ? "totalProfits1" : "totalProfits2"}`
+    );
+    await onValue(sheetRef, (snapshot) => {
+      // console.log(snapshot.val()[1]);
+      dispatch(updateReports(snapshot.val()[1]));
+    });
+  };
+
+  useEffect(() => {
+    databaseProfits();
+  }, [activeSheet]);
   const data = {
     options: {
       theme: {
@@ -136,7 +171,7 @@ function Report() {
               <Box
                 sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
               >
-                ₹25.72K
+                ₹{totalRevenue}
               </Box>
               <TrendingUpIcon
                 sx={{
@@ -187,7 +222,7 @@ function Report() {
               <Box
                 sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
               >
-                ₹12.6K
+                ₹{totalExpences}
               </Box>
 
               <TrendingUpIcon
@@ -246,7 +281,7 @@ function Report() {
                     fontWeight: "500",
                   }}
                 >
-                  ₹48.6K
+                  ₹{adCredit}
                 </Box>
               </div>
             </div>
@@ -282,7 +317,7 @@ function Report() {
                     fontWeight: "500",
                   }}
                 >
-                  ₹8.92K
+                  ₹{realtimeProfit}
                 </Box>
               </div>
             </div>
@@ -318,7 +353,7 @@ function Report() {
                     fontWeight: "500",
                   }}
                 >
-                  ₹45.7K
+                  ₹{incommingPay}
                 </Box>
               </div>
             </div>
@@ -332,7 +367,7 @@ function Report() {
               <p style={{ color: "#fff6", fontSize: ".85em" }}>
                 Real Time Profit
               </p>
-              <h1>₹156K</h1>
+              <h1>₹{realtimeProfit}</h1>
             </span>
             <span className="flex">
               <div
@@ -362,7 +397,7 @@ function Report() {
               <p style={{ color: "#fff6", fontSize: ".85em" }}>
                 Estimated Profit
               </p>
-              <h1>₹653.5K</h1>
+              <h1>₹{estimatedProfit}</h1>
             </span>
             <span className="flex">
               <div

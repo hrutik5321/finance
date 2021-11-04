@@ -190,10 +190,10 @@ function Expences() {
     },
     {
       color: "#0bafff",
-      expences: shippingTotal,
+      expences: 0,
       percent: 35,
       title: "SHIPPING",
-      values: shippingData,
+      values: [0, 0, 0, 0, 0],
     },
     {
       color: "#4fbf67",

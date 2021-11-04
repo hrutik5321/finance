@@ -15,13 +15,4 @@ const fire = firebase.initializeApp(firebaseConfig);
 
 export default fire;
 
-// Value formatter
-// function kFormatter(num) {
-//   return Math.abs(num) > 999
-//     ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
-//     : Math.sign(num) * Math.abs(num);
-// }
-
-// console.log(kFormatter(1200)); // 1.2k
-// console.log(kFormatter(-1200)); // -1.2k
-// console.log(kFormatter(900)); // 900
+// firebase deploy --only hosting

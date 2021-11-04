@@ -25,7 +25,9 @@ export const authenticationSlice = createSlice({
       state.isLoggedin = !state.isLoggedin;
     },
     authenticatedUser: (state, action) => {
-      state.authUser = action.payload;
+      if (action.payload.email) {
+        state.authUser = action.payload;
+      }
     },
     otherSigninUser: (state, action) => {
       state.authUser = action.payload;

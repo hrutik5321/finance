@@ -1,5 +1,5 @@
 import DownloadIcon from "../assets/icons/download.svg";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/styles/Revenue.css";
 import Chart from "react-apexcharts";
 
@@ -17,6 +17,7 @@ import Razerpay from "../assets/icons/razerpay.svg";
 import Vimbus from "../assets/icons/vimbus.png";
 import Paytm from "../assets/icons/paytm.svg";
 import Cashfree from "../assets/icons/cashfree.png";
+import { getDatabase, onValue, ref } from "@firebase/database";
 
 import {
   getUserTotalrevenue,
@@ -39,7 +40,54 @@ function Revenue() {
     (state) => state.adminrevenue
   );
 
+  const [cStripe, setCStripe] = useState(0);
+  const [cRazorPay, setCRazorPay] = useState(0);
+  const [cCashFree, setCCashFree] = useState(0);
+  const [cPaytm, setCPaytm] = useState(0);
+  const [cImbus, setCImbus] = useState(0);
+  const [cRevenueTotal, setCRevenueTotal] = useState(0);
+
+  const revenueBrandCosts = [
+    cStripe,
+    cRazorPay,
+    cCashFree,
+    cPaytm,
+    cImbus,
+    cStripe,
+  ];
+
+  const databaseRevenue = async () => {
+    const db = getDatabase();
+    const sheetRef = ref(db, "revenue");
+    await onValue(sheetRef, (snapshot) => {
+      // console.log(snapshot.val()[1]);
+      console.log(snapshot.val());
+      snapshot.val().map((d) => {
+        if (d.Sales === "STRIPE") {
+          setCStripe(d.Amount);
+        }
+        if (d.Sales === "RAZORPAY | KUSH") {
+          setCRazorPay(d.Amount);
+        }
+        if (d.Sales === "PAYTM") {
+          setCPaytm(d.Amount);
+        }
+        if (d.Sales === "UPI | CONSULTING") {
+          setCImbus(d.Amount);
+        }
+        if (d.Sales === "CASH FREE") {
+          setCCashFree(d.Amount);
+        }
+        if (d.Sales === "TOTAL") {
+          setCRevenueTotal(d.Amount);
+        }
+      });
+    });
+    console.log(cRevenueTotal);
+  };
+
   useEffect(() => {
+    databaseRevenue();
     if (totalRevenue.length <= 0 || startUpdate) {
       dispatch(getUserTotalrevenue());
     }
@@ -144,7 +192,7 @@ function Revenue() {
           <img src={DownloadIcon} alt="" />
           <span>
             <p>Total Revenue</p>
-            <h1>₹127,892.32</h1>
+            <h1>₹{cRevenueTotal}</h1>
           </span>
           {totalRevenueLoader ? (
             <Box sx={{ display: "flex" }}>
@@ -170,7 +218,7 @@ function Revenue() {
               <BarChart
                 key={i}
                 title={data.title}
-                expences={data.expences}
+                expences={revenueBrandCosts[i]}
                 icon={revenueIcons[i]}
                 color={data.color}
                 revdata={data.values}

@@ -117,7 +117,7 @@ function BarChart({ title, expences, icon, color, revdata }) {
             style={{ width: "100%", borderRadius: 0, height: "40px" }}
           />
           <span>
-            <h2 style={{ marginLeft: "20px" }}>₹ {kFormatter(expences)}</h2>
+            <h2 style={{ marginLeft: "20px" }}>₹ {expences}</h2>
           </span>
         </section>
       </div>

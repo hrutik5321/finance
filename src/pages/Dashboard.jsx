@@ -22,6 +22,10 @@ import fire from "../firebase/fire";
 import { useDispatch, useSelector } from "react-redux";
 import { updateValues, updateLoader } from "../features/sheets/staticsSlice";
 import { getDatabase, onValue, ref } from "@firebase/database";
+import {
+  updateReportsLoader,
+  updateReports,
+} from "../features/sheets/reportsSlice";
 
 import {
   getUserSpendMoney,
@@ -41,9 +45,19 @@ function Dashboard() {
   } = useSelector((state) => state.userincomes);
   const { loader, adSpend, COG, Shipping, tax, salary, misc, activeSheet } =
     useSelector((state) => state.statics);
-  // const { username } = useSelector((state) => state.authentication);
   const [username, setUserName] = useState("");
   const [dayName, setDayName] = useState("");
+
+  // TOTOAL REPORTS
+  const {
+    reportsLoader,
+    totalRevenue,
+    totalExpences,
+    realtimeProfit,
+    stock,
+    incommingPay,
+    estimatedProfit,
+  } = useSelector((state) => state.reports);
 
   const data = {
     options: {
@@ -157,8 +171,23 @@ function Dashboard() {
     });
   };
 
+  const databaseProfits = async () => {
+    dispatch(updateReportsLoader());
+    const db = getDatabase();
+    const sheetRef = ref(
+      db,
+      `${activeSheet === 1 ? "totalProfits1" : "totalProfits2"}`
+    );
+    await onValue(sheetRef, (snapshot) => {
+      // console.log(snapshot.val()[1]);
+      dispatch(updateReports(snapshot.val()[1]));
+      console.log(snapshot.val()[1].EstimatedProfit);
+    });
+  };
+
   useEffect(() => {
     databaseValues();
+    databaseProfits();
   }, [activeSheet]);
 
   // const setDatas = () => {
@@ -311,7 +340,7 @@ function Dashboard() {
         },
       },
     },
-    series: [adSpend, COG, Shipping, tax, salary, misc],
+    series: [adSpend, COG, 0, 0, 0, misc],
   };
 
   return (
@@ -359,7 +388,7 @@ function Dashboard() {
             <Box
               sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
             >
-              ₹25.72K
+              ₹{totalRevenue}
             </Box>
             <TrendingUpIcon
               sx={{
@@ -411,7 +440,7 @@ function Dashboard() {
             <Box
               sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
             >
-              ₹12.6K
+              ₹{totalExpences}
             </Box>
 
             <Box
@@ -437,14 +466,14 @@ function Dashboard() {
           <div>
             <section className="flex">
               <p style={{ color: "#FF5E2F", fontSize: 12, fontWeight: "bold" }}>
-                REAL TIME PROFIT
+                STOCK
               </p>
               <img src={PlusIcon} alt="" />
             </section>
             <Box
               sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
             >
-              ₹8.92K
+              ₹{stock}
             </Box>
             <TrendingDownIcon
               sx={{
@@ -496,7 +525,7 @@ function Dashboard() {
             <Box
               sx={{ color: "text.primary", fontSize: 30, fontWeight: "500" }}
             >
-              ₹45.7K
+              ₹{estimatedProfit}
             </Box>
             <TrendingUpIcon
               sx={{

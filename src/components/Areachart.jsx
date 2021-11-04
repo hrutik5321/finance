@@ -104,7 +104,7 @@ function Areachart({ title, expences, icon, color, addata }) {
           <span>
             <p style={{ color: `${color}` }}>{title}</p>
             <img src={EditIcon} alt="" />
-            <h2>₹ {kFormatter(expences)}</h2>
+            <h2>₹ {expences}</h2>
           </span>
         </section>
         <div className="roundBox flex">
